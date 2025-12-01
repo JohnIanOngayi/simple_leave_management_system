@@ -35,7 +35,7 @@ namespace simple_leave_management_system.Models
 
         [Required]
         [StringLength(20, ErrorMessage = "Status cannot be longer than 20 chars")]
-        public string? Status { get; set; } // Pending, Approved, Rejected, Cancelled
+        public string? Status { get; set; } = "Pending";// Pending, Approved, Rejected, Cancelled
 
         public DateTime AppliedOn { get; set; } = DateTime.Now;
 

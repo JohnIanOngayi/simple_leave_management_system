@@ -12,8 +12,8 @@ using simple_leave_management_system.Infrastructure;
 namespace simple_leave_management_system.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20251201114046_add_constraints")]
-    partial class add_constraints
+    [Migration("20251201123252_initial_build")]
+    partial class initial_build
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,10 +50,6 @@ namespace simple_leave_management_system.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("DepartmentId");
-
-                    b.HasIndex("DepartmentName")
-                        .IsUnique()
-                        .HasDatabaseName("UQ_Departments_DepartmentName");
 
                     b.ToTable("Departments");
                 });
@@ -101,10 +97,6 @@ namespace simple_leave_management_system.Migrations
                     b.HasKey("EmployeeId");
 
                     b.HasIndex("DepartmentId");
-
-                    b.HasIndex("EmployeeCode")
-                        .IsUnique()
-                        .HasDatabaseName("UQ_Employees_EmployeeCode");
 
                     b.ToTable("Employees");
                 });
@@ -203,11 +195,9 @@ namespace simple_leave_management_system.Migrations
 
                     b.HasKey("LeaveQuotaId");
 
-                    b.HasIndex("LeaveTypeId");
+                    b.HasIndex("EmployeeId");
 
-                    b.HasIndex("EmployeeId", "LeaveTypeId", "LeaveYear")
-                        .IsUnique()
-                        .HasDatabaseName("UQ_Employee_LeaveType_Year");
+                    b.HasIndex("LeaveTypeId");
 
                     b.ToTable("LeaveQuotas");
                 });
@@ -252,10 +242,6 @@ namespace simple_leave_management_system.Migrations
                     b.HasKey("LeaveTypeId");
 
                     b.HasIndex("EmployeeId");
-
-                    b.HasIndex("LeaveTypeCode")
-                        .IsUnique()
-                        .HasDatabaseName("UQ_LeaveTypes_LeaveTypeCode");
 
                     b.ToTable("LeaveTypes");
                 });

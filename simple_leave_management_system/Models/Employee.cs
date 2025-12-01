@@ -34,5 +34,10 @@ namespace simple_leave_management_system.Models
         public ICollection<LeaveType>? LeaveTypes { get; set; }
         public ICollection<LeaveQuota>? LeaveQuotas { get; set; }
         public ICollection<LeaveApplication>? LeaveApplications { get; set; }
+
+        [NotMapped]
+        public string? EmployeeName => $"{FirstName} {LastName}".Trim();
+        [NotMapped]
+        public string? DisplayText => $"{EmployeeCode} - {FirstName} {LastName}".Trim();
     }
 }

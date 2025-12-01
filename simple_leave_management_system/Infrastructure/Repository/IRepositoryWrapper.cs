@@ -9,5 +9,8 @@ namespace simple_leave_management_system.Infrastructure.Repository
         ILeaveTypeRepository LeaveTypes { get; }
         ILeaveQuotaRepository LeaveQuotas { get; }
         ILeaveApplicationRepository LeaveApplications { get; }
+
+        void SaveChanges();
+        Task SaveChangesAsync();
     }
 }

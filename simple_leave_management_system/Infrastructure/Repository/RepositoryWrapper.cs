@@ -56,5 +56,15 @@ namespace simple_leave_management_system.Infrastructure.Repository
                 return _leaveApplications;
             }
         }
+
+        public void SaveChanges()
+        {
+            int _ = _repositoryContext.SaveChanges();
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            int _ = await _repositoryContext.SaveChangesAsync();
+        }
     }
 }

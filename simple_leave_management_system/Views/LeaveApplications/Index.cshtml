@@ -1,0 +1,89 @@
+﻿@model IEnumerable<simple_leave_management_system.Models.LeaveApplication>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FromDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ToDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalDays)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reason)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppliedOn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Approver)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApprovedOn)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Employee.EmployeeCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LeaveType.LeaveTypeCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FromDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ToDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalDays)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reason)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AppliedOn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Approver.EmployeeCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApprovedOn)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.LeaveApplicationId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.LeaveApplicationId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.LeaveApplicationId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

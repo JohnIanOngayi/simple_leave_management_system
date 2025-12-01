@@ -17,76 +17,76 @@ namespace simple_leave_management_system.Infrastructure
         {
             base.OnModelCreating(modelBuilder);
 
-            // ===== UNIQUE CONSTRAINTS =====
+        //    // ===== UNIQUE CONSTRAINTS =====
 
-            // Department - DepartmentName Unique
-            modelBuilder.Entity<Department>()
-                .HasIndex(d => d.DepartmentName)
-                .IsUnique()
-                .HasDatabaseName("UQ_Departments_DepartmentName");
+        //    // Department - DepartmentName Unique
+        //    modelBuilder.Entity<Department>()
+        //        .HasIndex(d => d.DepartmentName)
+        //        .IsUnique()
+        //        .HasDatabaseName("UQ_Departments_DepartmentName");
 
-            // Employee - EmployeeCode Unique
-            modelBuilder.Entity<Employee>()
-                .HasIndex(e => e.EmployeeCode)
-                .IsUnique()
-                .HasDatabaseName("UQ_Employees_EmployeeCode");
+        //    // Employee - EmployeeCode Unique
+        //    modelBuilder.Entity<Employee>()
+        //        .HasIndex(e => e.EmployeeCode)
+        //        .IsUnique()
+        //        .HasDatabaseName("UQ_Employees_EmployeeCode");
 
-            // LeaveType - LeaveTypeCode Unique
-            modelBuilder.Entity<LeaveType>()
-                .HasIndex(lt => lt.LeaveTypeCode)
-                .IsUnique()
-                .HasDatabaseName("UQ_LeaveTypes_LeaveTypeCode");
+        //    // LeaveType - LeaveTypeCode Unique
+        //    modelBuilder.Entity<LeaveType>()
+        //        .HasIndex(lt => lt.LeaveTypeCode)
+        //        .IsUnique()
+        //        .HasDatabaseName("UQ_LeaveTypes_LeaveTypeCode");
 
-            // LeaveQuota - Composite Unique (EmployeeId, LeaveTypeId, LeaveYear)
-            modelBuilder.Entity<LeaveQuota>()
-                .HasIndex(lq => new { lq.EmployeeId, lq.LeaveTypeId, lq.LeaveYear })
-                .IsUnique()
-                .HasDatabaseName("UQ_Employee_LeaveType_Year");
+        //    // LeaveQuota - Composite Unique (EmployeeId, LeaveTypeId, LeaveYear)
+        //    modelBuilder.Entity<LeaveQuota>()
+        //        .HasIndex(lq => new { lq.EmployeeId, lq.LeaveTypeId, lq.LeaveYear })
+        //        .IsUnique()
+        //        .HasDatabaseName("UQ_Employee_LeaveType_Year");
 
-            // ===== RELATIONSHIPS =====
+        // ===== RELATIONSHIPS =====
 
-            // Department -> Employees (1:Many)
-            modelBuilder.Entity<Employee>()
+        // Department -> Employees (1:Many)
+        modelBuilder.Entity<Employee>()
                 .HasOne(e => e.Department)
                 .WithMany(d => d.Employees)
                 .HasForeignKey(e => e.DepartmentId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_Employees_Departments");
 
-            // Employee -> LeaveQuotas (1:Many)
-            modelBuilder.Entity<LeaveQuota>()
+        // Employee -> LeaveQuotas (1:Many)
+        modelBuilder.Entity<LeaveQuota>()
                 .HasOne(lq => lq.Employee)
                 .WithMany(e => e.LeaveQuotas)
                 .HasForeignKey(lq => lq.EmployeeId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_Quota_Employee");
 
-            // LeaveType -> LeaveQuotas (1:Many)
-            modelBuilder.Entity<LeaveQuota>()
+        // LeaveType -> LeaveQuotas (1:Many)
+        modelBuilder.Entity<LeaveQuota>()
                 .HasOne(lq => lq.LeaveType)
                 .WithMany(lt => lt.LeaveQuotas)
                 .HasForeignKey(lq => lq.LeaveTypeId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_Quota_LeaveType");
 
-            // Employee -> LeaveApplications (1:Many)
-            modelBuilder.Entity<LeaveApplication>()
+        // Employee -> LeaveApplications (1:Many)
+        modelBuilder.Entity<LeaveApplication>()
                 .HasOne(la => la.Employee)
                 .WithMany(e => e.LeaveApplications)
                 .HasForeignKey(la => la.EmployeeId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_LeaveApp_Employee");
 
-            // LeaveType -> LeaveApplications (1:Many)
-            modelBuilder.Entity<LeaveApplication>()
+        // LeaveType -> LeaveApplications (1:Many)
+        modelBuilder.Entity<LeaveApplication>()
                 .HasOne(la => la.LeaveType)
                 .WithMany(lt => lt.LeaveApplications)
                 .HasForeignKey(la => la.LeaveTypeId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_LeaveApp_LeaveType");
 
-            // Self-referencing for Approver (Employee approves Employee's leave)
-            modelBuilder.Entity<LeaveApplication>()
+        // Self-referencing for Approver (Employee approves Employee's leave)
+        modelBuilder.Entity<LeaveApplication>()
                 .HasOne(la => la.Approver)
                 .WithMany()
                 .HasForeignKey(la => la.ApprovedBy)
