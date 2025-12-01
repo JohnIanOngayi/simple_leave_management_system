@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using simple_leave_management_system.Infrastructure;
+using simple_leave_management_system.Infrastructure.Repository;
 using simple_leave_management_system.Models;
+using System.Threading.Tasks;
 
 namespace simple_leave_management_system.Controllers
 {
     public class LeaveQuotasController : Controller
     {
-        private readonly RepositoryContext _context;
+        private readonly IRepositoryWrapper _context;
 
-        public LeaveQuotasController(RepositoryContext context)
+        public LeaveQuotasController(IRepositoryWrapper context)
         {
             _context = context;
         }
@@ -18,8 +19,8 @@ namespace simple_leave_management_system.Controllers
         // GET: LeaveQuotas
         public async Task<IActionResult> Index()
         {
-            var repositoryContext = _context.LeaveQuotas.Include(l => l.Employee).Include(l => l.LeaveType);
-            return View(await repositoryContext.ToListAsync());
+            List<LeaveQuota>? leaveQuotas = await _context.LeaveQuotas.GetAllAsync(lq => lq.Employee, lq => lq.LeaveType) as List<LeaveQuota>;
+            return View(leaveQuotas);
         }
 
         // GET: LeaveQuotas/Details/5
@@ -30,10 +31,7 @@ namespace simple_leave_management_system.Controllers
                 return NotFound();
             }
 
-            var leaveQuota = await _context.LeaveQuotas
-                .Include(l => l.Employee)
-                .Include(l => l.LeaveType)
-                .FirstOrDefaultAsync(m => m.LeaveQuotaId == id);
+            LeaveQuota? leaveQuota = await _context.LeaveQuotas.FindOneAsync(lq => lq.LeaveQuotaId == id, lq => lq.Employee, lq => lq.LeaveType);
             if (leaveQuota == null)
             {
                 return NotFound();
@@ -43,10 +41,14 @@ namespace simple_leave_management_system.Controllers
         }
 
         // GET: LeaveQuotas/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "EmployeeCode");
-            ViewData["LeaveTypeId"] = new SelectList(_context.LeaveTypes, "LeaveTypeId", "LeaveTypeCode");
+            List<Employee>? employees = await _context.Employees.GetAllAsync() as List<Employee>;
+            List<LeaveType>? leaveTypes = await _context.LeaveTypes.GetAllAsync() as List<LeaveType>;
+
+            ViewData["EmployeeId"] = new SelectList(employees, "EmployeeId", "DisplayText");
+            ViewData["LeaveTypeId"] = new SelectList(leaveTypes, "LeaveTypeId", "LeaveTypeName");
+
             return View();
         }
 
@@ -59,12 +61,16 @@ namespace simple_leave_management_system.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(leaveQuota);
+                await _context.LeaveQuotas.CreateAsync(leaveQuota);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "EmployeeCode", leaveQuota.EmployeeId);
-            ViewData["LeaveTypeId"] = new SelectList(_context.LeaveTypes, "LeaveTypeId", "LeaveTypeCode", leaveQuota.LeaveTypeId);
+
+            List<Employee>? employees = await _context.Employees.GetAllAsync() as List<Employee>;
+            List<LeaveType>? leaveTypes = await _context.LeaveTypes.GetAllAsync() as List<LeaveType>;
+
+            ViewData["EmployeeId"] = new SelectList(employees, "EmployeeId", "DisplayText", leaveQuota.EmployeeId);
+            ViewData["LeaveTypeId"] = new SelectList(leaveTypes, "LeaveTypeId", "LeaveTypeName", leaveQuota.LeaveTypeId);
             return View(leaveQuota);
         }
 
@@ -76,13 +82,17 @@ namespace simple_leave_management_system.Controllers
                 return NotFound();
             }
 
-            var leaveQuota = await _context.LeaveQuotas.FindAsync(id);
+            LeaveQuota? leaveQuota = await _context.LeaveQuotas.FindOneAsync(lq => lq.LeaveQuotaId == id);
             if (leaveQuota == null)
             {
                 return NotFound();
             }
-            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "EmployeeCode", leaveQuota.EmployeeId);
-            ViewData["LeaveTypeId"] = new SelectList(_context.LeaveTypes, "LeaveTypeId", "LeaveTypeCode", leaveQuota.LeaveTypeId);
+
+            List<Employee>? employees = await _context.Employees.GetAllAsync() as List<Employee>;
+            List<LeaveType>? leaveTypes = await _context.LeaveTypes.GetAllAsync() as List<LeaveType>;
+
+            ViewData["EmployeeId"] = new SelectList(employees, "EmployeeId", "DisplayText", leaveQuota.EmployeeId);
+            ViewData["LeaveTypeId"] = new SelectList(leaveTypes, "LeaveTypeId", "LeaveTypeName", leaveQuota.LeaveTypeId);
             return View(leaveQuota);
         }
 
@@ -102,12 +112,12 @@ namespace simple_leave_management_system.Controllers
             {
                 try
                 {
-                    _context.Update(leaveQuota);
+                    await _context.LeaveQuotas.UpdateAsync(leaveQuota);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LeaveQuotaExists(leaveQuota.LeaveQuotaId))
+                    if (!await LeaveQuotaExists(leaveQuota.LeaveQuotaId))
                     {
                         return NotFound();
                     }
@@ -118,8 +128,12 @@ namespace simple_leave_management_system.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EmployeeId"] = new SelectList(_context.Employees, "EmployeeId", "EmployeeCode", leaveQuota.EmployeeId);
-            ViewData["LeaveTypeId"] = new SelectList(_context.LeaveTypes, "LeaveTypeId", "LeaveTypeCode", leaveQuota.LeaveTypeId);
+
+            List<Employee>? employees = await _context.Employees.GetAllAsync() as List<Employee>;
+            List<LeaveType>? leaveTypes = await _context.LeaveTypes.GetAllAsync() as List<LeaveType>;
+
+            ViewData["EmployeeId"] = new SelectList(employees, "EmployeeId", "DisplayText", leaveQuota.EmployeeId);
+            ViewData["LeaveTypeId"] = new SelectList(leaveTypes, "LeaveTypeId", "LeaveTypeName", leaveQuota.LeaveTypeId);
             return View(leaveQuota);
         }
 
@@ -131,10 +145,7 @@ namespace simple_leave_management_system.Controllers
                 return NotFound();
             }
 
-            var leaveQuota = await _context.LeaveQuotas
-                .Include(l => l.Employee)
-                .Include(l => l.LeaveType)
-                .FirstOrDefaultAsync(m => m.LeaveQuotaId == id);
+            LeaveQuota? leaveQuota = await _context.LeaveQuotas.FindOneAsync(lq => lq.LeaveQuotaId == id, lq => lq.Employee, lq => lq.LeaveType);
             if (leaveQuota == null)
             {
                 return NotFound();
@@ -148,19 +159,19 @@ namespace simple_leave_management_system.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var leaveQuota = await _context.LeaveQuotas.FindAsync(id);
+            LeaveQuota? leaveQuota = await _context.LeaveQuotas.FindOneAsync(lq => lq.LeaveQuotaId == id);
             if (leaveQuota != null)
             {
-                _context.LeaveQuotas.Remove(leaveQuota);
+                await _context.LeaveQuotas.DeleteAsync(leaveQuota);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool LeaveQuotaExists(int id)
+        private async Task<bool> LeaveQuotaExists(int id)
         {
-            return _context.LeaveQuotas.Any(e => e.LeaveQuotaId == id);
+            return await _context.LeaveQuotas.ExistsAsync(lq => lq.LeaveQuotaId == id);
         }
     }
 }
