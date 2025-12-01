@@ -20,8 +20,10 @@ namespace simple_leave_management_system.Models
         [ValidateNever]
         public LeaveType? LeaveType { get; set; }
 
+        [Required]
         public DateTime FromDate { get; set; }
 
+        [Required]
         public DateTime ToDate { get; set; }
 
         [Column(TypeName = "decimal(5, 2)")]
@@ -37,11 +39,23 @@ namespace simple_leave_management_system.Models
 
         public DateTime AppliedOn { get; set; } = DateTime.Now;
 
-        public int ApprovedBy { get; set; }
+        public int? ApprovedBy { get; set; }
         [ForeignKey("ApprovedBy")]
         [ValidateNever]
         public Employee? Approver { get; set; }
 
-        public DateTime ApprovedOn { get; set; }
+        public DateTime? ApprovedOn { get; set; }
+
+        // FromDate ToDate Validation
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (FromDate >= ToDate)
+            {
+                yield return new ValidationResult(
+                    "ToDate must be greater than or equal to FromDate",
+                    new[] { nameof(FromDate), nameof(ToDate) }
+                );
+            }
+        }
     }
 }

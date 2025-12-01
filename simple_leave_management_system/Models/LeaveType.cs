@@ -21,5 +21,6 @@ namespace simple_leave_management_system.Models
         public bool IsActive { get; set; } = true;
 
         public ICollection<LeaveQuota>? LeaveQuotas { get; set; }
+        public ICollection<LeaveApplication>? LeaveApplications { get; set; }
     }
 }

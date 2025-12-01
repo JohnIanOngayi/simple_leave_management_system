@@ -1,4 +1,13 @@
+using simple_leave_management_system.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.ConfigureMySqlContext(builder.Configuration);
+/// IF MSSQL add connection string `DefaultConnection` in appsettings.json and comment mysql above
+//builder.Services.ConfigureMsSqlContext(builder.Configuration);
+
+// Add Context
+builder.Services.ConfigureRepositoryWrapper();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
