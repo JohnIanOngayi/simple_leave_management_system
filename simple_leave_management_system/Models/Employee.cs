@@ -25,7 +25,7 @@ namespace simple_leave_management_system.Models
         public int DepartmentId { get; set; }
         [ForeignKey("DepartmentId")]
         [ValidateNever]
-        public Department? Department { get; set; }
+        public required Department Department { get; set; }
 
         public DateTime DateOfJoining { get; set; }
 

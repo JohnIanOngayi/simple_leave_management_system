@@ -16,12 +16,12 @@ namespace simple_leave_management_system.Models
         public int EmployeeId { get; set; }
         [ForeignKey("EmployeeId")]
         [ValidateNever]
-        public Employee? Employee { get; set; }
+        public required Employee Employee { get; set; }
 
         public int LeaveTypeId { get; set; }
         [ForeignKey("LeaveTypeId")]
         [ValidateNever]
-        public LeaveType? LeaveType { get; set; }
+        public required LeaveType LeaveType { get; set; }
 
         [Required]
         [Range(2020, 2100, ErrorMessage = "Leave year must be between 2020 and 2100")]

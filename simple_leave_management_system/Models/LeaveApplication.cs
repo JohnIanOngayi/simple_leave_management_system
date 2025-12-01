@@ -13,12 +13,12 @@ namespace simple_leave_management_system.Models
         public int EmployeeId { get; set; }
         [ForeignKey("EmployeeId")]
         [ValidateNever]
-        public Employee? Employee { get; set; }
+        public required Employee Employee { get; set; }
 
         public int LeaveTypeId { get; set; }
         [ForeignKey("LeaveTypeId")]
         [ValidateNever]
-        public LeaveType? LeaveType { get; set; }
+        public required LeaveType LeaveType { get; set; }
 
         [Required]
         public DateTime FromDate { get; set; }
@@ -42,7 +42,7 @@ namespace simple_leave_management_system.Models
         public int? ApprovedBy { get; set; }
         [ForeignKey("ApprovedBy")]
         [ValidateNever]
-        public Employee? Approver { get; set; }
+        public required Employee Approver { get; set; }
 
         public DateTime? ApprovedOn { get; set; }
 
