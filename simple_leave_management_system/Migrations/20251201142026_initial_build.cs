@@ -168,9 +168,21 @@ namespace simple_leave_management_system.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
+                name: "UQ_Departments_DepartmentName",
+                table: "Departments",
+                column: "DepartmentName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Employees_DepartmentId",
                 table: "Employees",
                 column: "DepartmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "UQ_Employees_EmployeeCode",
+                table: "Employees",
+                column: "EmployeeCode",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_LeaveApplications_ApprovedBy",
@@ -188,19 +200,26 @@ namespace simple_leave_management_system.Migrations
                 column: "LeaveTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LeaveQuotas_EmployeeId",
-                table: "LeaveQuotas",
-                column: "EmployeeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_LeaveQuotas_LeaveTypeId",
                 table: "LeaveQuotas",
                 column: "LeaveTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "UQ_Employee_LeaveType_Year",
+                table: "LeaveQuotas",
+                columns: new[] { "EmployeeId", "LeaveTypeId", "LeaveYear" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LeaveTypes_EmployeeId",
                 table: "LeaveTypes",
                 column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "UQ_LeaveTypes_LeaveTypeCode",
+                table: "LeaveTypes",
+                column: "LeaveTypeCode",
+                unique: true);
         }
 
         /// <inheritdoc />

@@ -27,10 +27,17 @@ namespace simple_leave_management_system.Models
         [Range(2020, 2100, ErrorMessage = "Leave year must be between 2020 and 2100")]
         public int LeaveYear { get; set; } = 2025;
 
+        [Required]
         [Column(TypeName = "decimal(5, 2)")]
+        [Range(0, 365, ErrorMessage = "Total allocated must be between 0 and 365 days")]
         public decimal TotalAllocated { get; set; }
 
+        [Required]
         [Column(TypeName = "decimal(5, 2)")]
+        [Range(0, 365, ErrorMessage = "Total used must be between 0 and 365 days")]
         public decimal TotalUsed { get; set; } = decimal.Zero;
+
+        [NotMapped]
+        public decimal RemainingBalance => TotalAllocated - TotalUsed;
     }
 }

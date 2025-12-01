@@ -17,31 +17,31 @@ namespace simple_leave_management_system.Infrastructure
         {
             base.OnModelCreating(modelBuilder);
 
-        //    // ===== UNIQUE CONSTRAINTS =====
+            // ===== UNIQUE CONSTRAINTS =====
 
-        //    // Department - DepartmentName Unique
-        //    modelBuilder.Entity<Department>()
-        //        .HasIndex(d => d.DepartmentName)
-        //        .IsUnique()
-        //        .HasDatabaseName("UQ_Departments_DepartmentName");
+            // Department - DepartmentName Unique
+            modelBuilder.Entity<Department>()
+                .HasIndex(d => d.DepartmentName)
+                .IsUnique()
+                .HasDatabaseName("UQ_Departments_DepartmentName");
 
-        //    // Employee - EmployeeCode Unique
-        //    modelBuilder.Entity<Employee>()
-        //        .HasIndex(e => e.EmployeeCode)
-        //        .IsUnique()
-        //        .HasDatabaseName("UQ_Employees_EmployeeCode");
+            // Employee - EmployeeCode Unique
+            modelBuilder.Entity<Employee>()
+                .HasIndex(e => e.EmployeeCode)
+                .IsUnique()
+                .HasDatabaseName("UQ_Employees_EmployeeCode");
 
-        //    // LeaveType - LeaveTypeCode Unique
-        //    modelBuilder.Entity<LeaveType>()
-        //        .HasIndex(lt => lt.LeaveTypeCode)
-        //        .IsUnique()
-        //        .HasDatabaseName("UQ_LeaveTypes_LeaveTypeCode");
+            // LeaveType - LeaveTypeCode Unique
+            modelBuilder.Entity<LeaveType>()
+                .HasIndex(lt => lt.LeaveTypeCode)
+                .IsUnique()
+                .HasDatabaseName("UQ_LeaveTypes_LeaveTypeCode");
 
-        //    // LeaveQuota - Composite Unique (EmployeeId, LeaveTypeId, LeaveYear)
-        //    modelBuilder.Entity<LeaveQuota>()
-        //        .HasIndex(lq => new { lq.EmployeeId, lq.LeaveTypeId, lq.LeaveYear })
-        //        .IsUnique()
-        //        .HasDatabaseName("UQ_Employee_LeaveType_Year");
+            // LeaveQuota - Composite Unique (EmployeeId, LeaveTypeId, LeaveYear)
+            modelBuilder.Entity<LeaveQuota>()
+                .HasIndex(lq => new { lq.EmployeeId, lq.LeaveTypeId, lq.LeaveYear })
+                .IsUnique()
+                .HasDatabaseName("UQ_Employee_LeaveType_Year");
 
         // ===== RELATIONSHIPS =====
 
