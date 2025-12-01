@@ -18,7 +18,7 @@ namespace simple_leave_management_system.Controllers
         // GET: LeaveApplications
         public async Task<IActionResult> Index()
         {
-            List<LeaveApplication>? leaveApplications = await _context.LeaveApplications.GetAllAsync(a => a.Employee, a => a.LeaveType) as List<LeaveApplication>;
+            List<LeaveApplication>? leaveApplications = await _context.LeaveApplications.GetAllAsync(a => a.Employee, a => a.LeaveType, a => a.Approver) as List<LeaveApplication>;
             return View(leaveApplications);
         }
 
@@ -50,8 +50,8 @@ namespace simple_leave_management_system.Controllers
             List<LeaveType>? leaveTypes = await _context.LeaveTypes.GetAllAsync() as List<LeaveType>;
             var allowedStatus = new List<SelectListItem>
                 {
-                    new SelectListItem { Value = "Pending", Text = "Pending" },
-                    new SelectListItem { Value = "Approved", Text = "Approved", Selected = true },
+                    new SelectListItem { Value = "Pending", Text = "Pending", Selected = true },
+                    new SelectListItem { Value = "Approved", Text = "Approved"},
                     new SelectListItem { Value = "Rejected", Text = "Rejected" },
                     new SelectListItem { Value = "Cancelled", Text = "Cancelled" }
                 };
@@ -82,8 +82,8 @@ namespace simple_leave_management_system.Controllers
             List<LeaveType>? leaveTypes = await _context.LeaveTypes.GetAllAsync() as List<LeaveType>;
             var allowedStatus = new List<SelectListItem>
                 {
-                    new SelectListItem { Value = "Pending", Text = "Pending" },
-                    new SelectListItem { Value = "Approved", Text = "Approved", Selected = true },
+                    new SelectListItem { Value = "Pending", Text = "Pending", Selected = true },
+                    new SelectListItem { Value = "Approved", Text = "Approved"},
                     new SelectListItem { Value = "Rejected", Text = "Rejected" },
                     new SelectListItem { Value = "Cancelled", Text = "Cancelled" }
                 };
