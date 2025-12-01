@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using simple_leave_management_system.Infrastructure.Repository;
 using simple_leave_management_system.Models;
-using System.Threading.Tasks;
 
 namespace simple_leave_management_system.Controllers
 {

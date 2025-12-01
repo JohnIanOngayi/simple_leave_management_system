@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using simple_leave_management_system.Infrastructure;
+using simple_leave_management_system.Infrastructure.Repository;
 using simple_leave_management_system.Models;
 
 namespace simple_leave_management_system.Controllers
 {
     public class DepartmentsController : Controller
     {
-        private readonly RepositoryContext _context;
+        private readonly IRepositoryWrapper _context;
 
-        public DepartmentsController(RepositoryContext context)
+        public DepartmentsController(IRepositoryWrapper context)
         {
             _context = context;
         }
@@ -17,7 +17,8 @@ namespace simple_leave_management_system.Controllers
         // GET: Departments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Departments.ToListAsync());
+            List<Department>? departments = await _context.Departments.GetAllAsync() as List<Department>;
+            return View(departments);
         }
 
         // GET: Departments/Details/5
@@ -28,8 +29,7 @@ namespace simple_leave_management_system.Controllers
                 return NotFound();
             }
 
-            var department = await _context.Departments
-                .FirstOrDefaultAsync(m => m.DepartmentId == id);
+            Department? department = await _context.Departments.FindOneAsync(d => d.DepartmentId == id);
             if (department == null)
             {
                 return NotFound();
@@ -53,7 +53,7 @@ namespace simple_leave_management_system.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(department);
+                await _context.Departments.CreateAsync(department);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -68,7 +68,7 @@ namespace simple_leave_management_system.Controllers
                 return NotFound();
             }
 
-            var department = await _context.Departments.FindAsync(id);
+            Department? department = await _context.Departments.FindOneAsync(d => d.DepartmentId == id);
             if (department == null)
             {
                 return NotFound();
@@ -92,12 +92,12 @@ namespace simple_leave_management_system.Controllers
             {
                 try
                 {
-                    _context.Update(department);
+                    await _context.Departments.UpdateAsync(department);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DepartmentExists(department.DepartmentId))
+                    if (!await DepartmentExists(department.DepartmentId))
                     {
                         return NotFound();
                     }
@@ -119,8 +119,7 @@ namespace simple_leave_management_system.Controllers
                 return NotFound();
             }
 
-            var department = await _context.Departments
-                .FirstOrDefaultAsync(m => m.DepartmentId == id);
+            Department? department = await _context.Departments.FindOneAsync(d => d.DepartmentId == id);
             if (department == null)
             {
                 return NotFound();
@@ -134,19 +133,19 @@ namespace simple_leave_management_system.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var department = await _context.Departments.FindAsync(id);
+            Department? department = await _context.Departments.FindOneAsync(d => d.DepartmentId == id);
             if (department != null)
             {
-                _context.Departments.Remove(department);
+                await _context.Departments.DeleteAsync(department);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DepartmentExists(int id)
+        private async Task<bool> DepartmentExists(int id)
         {
-            return _context.Departments.Any(e => e.DepartmentId == id);
+            return await _context.Departments.ExistsAsync(e => e.DepartmentId == id);
         }
     }
 }
