@@ -12,7 +12,7 @@ using simple_leave_management_system.Infrastructure;
 namespace simple_leave_management_system.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20251201113158_add_constraints")]
+    [Migration("20251201114046_add_constraints")]
     partial class add_constraints
     {
         /// <inheritdoc />

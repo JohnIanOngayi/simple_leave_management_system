@@ -11,18 +11,18 @@ namespace simple_leave_management_system.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             // LeaveQuota: TotalUsed cannot exceed TotalAllocated
-            migrationBuilder.Sql(@"
-                ALTER TABLE LeaveQuotas 
-                ADD CONSTRAINT CK_LeaveQuotas_TotalUsed 
-                CHECK (TotalUsed >= 0 AND TotalUsed <= TotalAllocated)
-            ");
+            //migrationBuilder.Sql(@"
+            //    ALTER TABLE LeaveQuotas 
+            //    ADD CONSTRAINT CK_LeaveQuotas_TotalUsed 
+            //    CHECK (TotalUsed >= 0 AND TotalUsed <= TotalAllocated)
+            //");
 
             // LeaveQuota: TotalAllocated must be valid range
-            migrationBuilder.Sql(@"
-                ALTER TABLE LeaveQuotas 
-                ADD CONSTRAINT CK_LeaveQuotas_TotalAllocated 
-                CHECK (TotalAllocated >= 0 AND TotalAllocated <= 365)
-            ");
+            //migrationBuilder.Sql(@"
+            //    ALTER TABLE LeaveQuotas 
+            //    ADD CONSTRAINT CK_LeaveQuotas_TotalAllocated 
+            //    CHECK (TotalAllocated >= 0 AND TotalAllocated <= 365)
+            //");
 
             // LeaveApplication: ToDate >= FromDate
             migrationBuilder.Sql(@"
@@ -32,11 +32,11 @@ namespace simple_leave_management_system.Migrations
             ");
 
             // LeaveApplication: TotalDays must be positive
-            migrationBuilder.Sql(@"
-                ALTER TABLE LeaveApplications 
-                ADD CONSTRAINT CK_LeaveApplications_TotalDays 
-                CHECK (TotalDays > 0 AND TotalDays <= 365)
-            ");
+            //migrationBuilder.Sql(@"
+            //    ALTER TABLE LeaveApplications 
+            //    ADD CONSTRAINT CK_LeaveApplications_TotalDays 
+            //    CHECK (TotalDays > 0 AND TotalDays <= 365)
+            //");
         }
 
         /// <inheritdoc />
@@ -47,18 +47,18 @@ namespace simple_leave_management_system.Migrations
             if (isMySql)
             {
                 // MySQL syntax: DROP CHECK
-                migrationBuilder.Sql("ALTER TABLE LeaveQuotas DROP CHECK CK_LeaveQuotas_TotalUsed");
-                migrationBuilder.Sql("ALTER TABLE LeaveQuotas DROP CHECK CK_LeaveQuotas_TotalAllocated");
+                //migrationBuilder.Sql("ALTER TABLE LeaveQuotas DROP CHECK CK_LeaveQuotas_TotalUsed");
+                //migrationBuilder.Sql("ALTER TABLE LeaveQuotas DROP CHECK CK_LeaveQuotas_TotalAllocated");
                 migrationBuilder.Sql("ALTER TABLE LeaveApplications DROP CHECK CK_LeaveApplications_DateRange");
-                migrationBuilder.Sql("ALTER TABLE LeaveApplications DROP CHECK CK_LeaveApplications_TotalDays");
+                //migrationBuilder.Sql("ALTER TABLE LeaveApplications DROP CHECK CK_LeaveApplications_TotalDays");
             }
             else
             {
                 // SQL Server syntax: DROP CONSTRAINT
-                migrationBuilder.Sql("ALTER TABLE LeaveQuotas DROP CONSTRAINT CK_LeaveQuotas_TotalUsed");
-                migrationBuilder.Sql("ALTER TABLE LeaveQuotas DROP CONSTRAINT CK_LeaveQuotas_TotalAllocated");
+                //migrationBuilder.Sql("ALTER TABLE LeaveQuotas DROP CONSTRAINT CK_LeaveQuotas_TotalUsed");
+                //migrationBuilder.Sql("ALTER TABLE LeaveQuotas DROP CONSTRAINT CK_LeaveQuotas_TotalAllocated");
                 migrationBuilder.Sql("ALTER TABLE LeaveApplications DROP CONSTRAINT CK_LeaveApplications_DateRange");
-                migrationBuilder.Sql("ALTER TABLE LeaveApplications DROP CONSTRAINT CK_LeaveApplications_TotalDays");
+                //migrationBuilder.Sql("ALTER TABLE LeaveApplications DROP CONSTRAINT CK_LeaveApplications_TotalDays");
             }
         }
     }
