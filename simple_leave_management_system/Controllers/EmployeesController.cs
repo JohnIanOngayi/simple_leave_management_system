@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using simple_leave_management_system.Infrastructure;
+using simple_leave_management_system.Infrastructure.Repository;
 using simple_leave_management_system.Models;
 
 namespace simple_leave_management_system.Controllers
 {
     public class EmployeesController : Controller
     {
-        private readonly RepositoryContext _context;
+        private readonly IRepositoryWrapper
+            _context;
 
-        public EmployeesController(RepositoryContext context)
+        public EmployeesController(IRepositoryWrapper context)
         {
             _context = context;
         }
@@ -18,8 +19,8 @@ namespace simple_leave_management_system.Controllers
         // GET: Employees
         public async Task<IActionResult> Index()
         {
-            var repositoryContext = _context.Employees.Include(e => e.Department);
-            return View(await repositoryContext.ToListAsync());
+            List<Employee>? employees = await _context.Employees.GetAllAsync(e => e.Department) as List<Employee>;
+            return View(employees);
         }
 
         // GET: Employees/Details/5
@@ -30,9 +31,7 @@ namespace simple_leave_management_system.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees
-                .Include(e => e.Department)
-                .FirstOrDefaultAsync(m => m.EmployeeId == id);
+            Employee? employee = await _context.Employees.FindOneAsync(e => e.EmployeeId == id, e => e.Department);
             if (employee == null)
             {
                 return NotFound();
@@ -42,9 +41,10 @@ namespace simple_leave_management_system.Controllers
         }
 
         // GET: Employees/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentName");
+            List<Department>? departments = await _context.Departments.GetAllAsync() as List<Department>;
+            ViewData["DepartmentId"] = new SelectList(departments, "DepartmentId", "DepartmentName");
             return View();
         }
 
@@ -57,11 +57,12 @@ namespace simple_leave_management_system.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(employee);
+                await _context.Employees.CreateAsync(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentName", employee.DepartmentId);
+            List<Department>? departments = await _context.Departments.GetAllAsync() as List<Department>;
+            ViewData["DepartmentId"] = new SelectList(departments, "DepartmentId", "DepartmentName", employee.DepartmentId);
             return View(employee);
         }
 
@@ -73,12 +74,13 @@ namespace simple_leave_management_system.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees.FindAsync(id);
+            Employee? employee = await _context.Employees.FindOneAsync(e => e.EmployeeId == id);
             if (employee == null)
             {
                 return NotFound();
             }
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentName", employee.DepartmentId);
+            List<Department>? departments = await _context.Departments.GetAllAsync() as List<Department>;
+            ViewData["DepartmentId"] = new SelectList(departments, "DepartmentId", "DepartmentName", employee.DepartmentId);
             return View(employee);
         }
 
@@ -98,12 +100,12 @@ namespace simple_leave_management_system.Controllers
             {
                 try
                 {
-                    _context.Update(employee);
+                    await _context.Employees.UpdateAsync(employee);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeExists(employee.EmployeeId))
+                    if (!await EmployeeExists(employee.EmployeeId))
                     {
                         return NotFound();
                     }
@@ -114,7 +116,8 @@ namespace simple_leave_management_system.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentName", employee.DepartmentId);
+            List<Department>? departments = await _context.Departments.GetAllAsync() as List<Department>;
+            ViewData["DepartmentId"] = new SelectList(departments, "DepartmentId", "DepartmentName", employee.DepartmentId);
             return View(employee);
         }
 
@@ -126,9 +129,7 @@ namespace simple_leave_management_system.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees
-                .Include(e => e.Department)
-                .FirstOrDefaultAsync(m => m.EmployeeId == id);
+            Employee? employee = await _context.Employees.FindOneAsync(e => e.EmployeeId == id, e => e.Department);
             if (employee == null)
             {
                 return NotFound();
@@ -142,19 +143,19 @@ namespace simple_leave_management_system.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
+            Employee? employee = await _context.Employees.FindOneAsync(e => e.EmployeeId == id);
             if (employee != null)
             {
-                _context.Employees.Remove(employee);
+                await _context.Employees.DeleteAsync(employee);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EmployeeExists(int id)
+        private async Task<bool> EmployeeExists(int id)
         {
-            return _context.Employees.Any(e => e.EmployeeId == id);
+            return await _context.Employees.ExistsAsync(e => e.EmployeeId == id);
         }
     }
 }
