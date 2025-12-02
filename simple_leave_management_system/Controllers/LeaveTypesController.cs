@@ -54,7 +54,6 @@ namespace simple_leave_management_system.Controllers
             if (ModelState.IsValid)
             {
                 await _context.LeaveTypes.CreateAsync(leaveType);
-                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(leaveType);
@@ -93,7 +92,6 @@ namespace simple_leave_management_system.Controllers
                 try
                 {
                     await _context.LeaveTypes.UpdateAsync(leaveType);
-                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -139,7 +137,6 @@ namespace simple_leave_management_system.Controllers
                 await _context.LeaveTypes.DeleteAsync(leaveType);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

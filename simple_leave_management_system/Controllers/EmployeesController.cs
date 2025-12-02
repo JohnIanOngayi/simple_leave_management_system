@@ -58,7 +58,6 @@ namespace simple_leave_management_system.Controllers
             if (ModelState.IsValid)
             {
                 await _context.Employees.CreateAsync(employee);
-                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             List<Department>? departments = await _context.Departments.GetAllAsync() as List<Department>;
@@ -101,7 +100,6 @@ namespace simple_leave_management_system.Controllers
                 try
                 {
                     await _context.Employees.UpdateAsync(employee);
-                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -149,7 +147,6 @@ namespace simple_leave_management_system.Controllers
                 await _context.Employees.DeleteAsync(employee);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

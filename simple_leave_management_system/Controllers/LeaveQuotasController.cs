@@ -61,7 +61,6 @@ namespace simple_leave_management_system.Controllers
             if (ModelState.IsValid)
             {
                 await _context.LeaveQuotas.CreateAsync(leaveQuota);
-                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
@@ -112,7 +111,6 @@ namespace simple_leave_management_system.Controllers
                 try
                 {
                     await _context.LeaveQuotas.UpdateAsync(leaveQuota);
-                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -164,7 +162,6 @@ namespace simple_leave_management_system.Controllers
                 await _context.LeaveQuotas.DeleteAsync(leaveQuota);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

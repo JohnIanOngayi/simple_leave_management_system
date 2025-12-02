@@ -54,7 +54,6 @@ namespace simple_leave_management_system.Controllers
             if (ModelState.IsValid)
             {
                 await _context.Departments.CreateAsync(department);
-                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(department);
@@ -93,7 +92,6 @@ namespace simple_leave_management_system.Controllers
                 try
                 {
                     await _context.Departments.UpdateAsync(department);
-                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -139,7 +137,6 @@ namespace simple_leave_management_system.Controllers
                 await _context.Departments.DeleteAsync(department);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
