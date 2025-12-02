@@ -1,0 +1,25 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+
+[*.{cs,cshtml}]
+# Sort system directives first
+dotnet_sort_system_directives_first = true
+
+# Prefer omitting braces for single-line embedded statements and allow embedded statements on same line
+# csharp_prefer_braces = false with suggestion severity allows omitting braces
+csharp_prefer_braces = false:suggestion
+csharp_style_allow_embedded_statements_on_same_line = true:suggestion
+
+# C# code formatting defaults
+csharp_new_line_before_open_brace = none:none
+
+# Use expression-bodied members preferences (keep defaults, adjust as needed)
+dotnet_style_prefer_expression_bodied_methods = false:silent
+
+ignore_case = true

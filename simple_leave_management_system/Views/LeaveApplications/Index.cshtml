@@ -49,10 +49,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Employee.EmployeeCode)
+                @Html.DisplayFor(modelItem => item.Employee.DisplayText)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LeaveType.LeaveTypeCode)
+                @Html.DisplayFor(modelItem => item.LeaveType.LeaveTypeName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FromDate)
